@@ -1,0 +1,151 @@
+let data = [
+    {
+        id : 1,
+        name : "Cat 1",
+        subCategories : [
+            {
+                id : 11,
+                name : "Sub 1-1",
+                subCategories : []
+            },
+            {
+                id : 12,
+                name : "Sub 1-2",
+                subCategories : []
+            },
+        ]
+    },
+    {
+        id : 2,
+        name : "Cat 2",
+        subCategories : [{
+            id : 21,
+            name : "Sub 2-1",
+            subCategories : [{
+                id : 211,
+                name : "Sub 2-1-1",
+                subCategories : []
+            }]
+        },]
+    },
+    {
+        id : 3,
+        name : "Cat 3",
+        subCategories : []
+    }
+]
+
+// display the categories and sub categories
+function printCategoriesAndSubcategories(data, indent = 0) {
+    data.forEach((category) => {
+        // Print the name of the category with proper indentation
+        console.log(" ".repeat(indent) + category.name + " , id => " + category.id);
+
+        // Check if the category has subcategories
+        if (category.subCategories.length > 0) {
+            // Recursively call the function to print subcategories
+            printCategoriesAndSubcategories(category.subCategories, indent + 2);
+        }
+    });
+}
+
+//// ADD CATEGORY 
+const addCategories = (categoryName) => {
+    let localData = nestedData;
+    // generate random id
+    let x = Math.floor(Math.random() * 100);
+    let token = `${x}` + Date.now();
+
+    let newCategory = {
+      id: parseInt(token),
+      name: categoryName,
+      subCategories: [],
+    };
+    // adding
+    localData.push(newCategory);
+    console.log(localData);
+    setNestedData(localData);
+  };
+
+// add sub category
+// if categoryId not provided it creates new category at top level
+function addSubCategoriesById(data,  subCategoriesToAdd, categoryId = null) {
+    if (categoryId === null){
+        data.push(...subCategoriesToAdd);
+    }else{
+        for (let category of data) {
+            if (category.id === categoryId) {
+                category.subCategories.push(...subCategoriesToAdd);
+                return true;
+            } else if (category.subCategories.length > 0) {
+                const subCategoryAdded = addSubCategoriesById(category.subCategories,  subCategoriesToAdd, categoryId = categoryId);
+                if (subCategoryAdded) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+// delete category
+function deleteCategoryById(data, categoryId) {
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].id === categoryId) {
+            data.splice(i, 1);
+            return true;
+        } else if (data[i].subCategories.length > 0) {
+            const subCategoryDeleted = deleteCategoryById(data[i].subCategories, categoryId);
+            if (subCategoryDeleted) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+// help makes paths to each last level subcategory
+// as last level subcategory only matters at final stage
+// it returns a struct :
+// 1) with key as last level subCATEGORY
+// 2) and its value with its path ! stored as (one level as an element) in an array(with all levels)
+function generateSubCategoryPaths(data) {
+    let result = {};
+
+    function traverseCategories(categories, path) {
+        for (let category of categories) {
+            let newPath = [...path, category.name];
+
+            if (category.subCategories.length === 0) {
+                result[category.name] = newPath;
+            } else {
+                traverseCategories(category.subCategories, newPath);
+            }
+        }
+    }
+
+    traverseCategories(data, []);
+
+    return result;
+}
+
+printCategoriesAndSubcategories(data);
+console.log("\n\n")
+
+addSubCategoriesById(data, [{
+    id : 2111,
+    name : "sub2-1-1-1",
+    subCategories : []
+}], categoryId = 21);
+
+printCategoriesAndSubcategories(data);
+console.log("\n\n")
+
+deleteCategoryById(data,2111);
+printCategoriesAndSubcategories(data);
+console.log("\n\n")
+
+let pathStruct = generateSubCategoryPaths(data)
+console.log(pathStruct)

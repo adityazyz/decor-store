@@ -1,0 +1,125 @@
+-> initially all this info will lie in search result page, later we will fetch it from database
+
+*** pass down the entire items of struct to each element on -> result page carditems -> productpage -> only required things to cart ***
+
+{
+    product_id :,
+    product_category :,
+    product_brand_name :,
+    product_name :,
+    product_image : ,
+    product_description : ,
+    product_price : ,
+    product_rating : ,
+    product_sizes : [] ,
+    product_colors :[] ,
+    product_brand_socials : {
+        instagram : ,
+        facebook : ,
+        twitter :
+    }
+}
+
+
+A) for every product we need following info : 
+    1- product id
+    2- product category
+    3- product brand name (string)
+    4- product name (string)
+    5- product image (string(address of photo))
+    6- product decription (string)
+    7- product price (int)
+    8- product rating (int)
+    9- product sizes (array of stings)
+    10- product colors (array of stings)
+    11- product brand socials (array of stings(links)) {if it is there}
+
+B) product info to be used at 
+    1) Search result page (as card items)
+    2) Product page 
+    3) in Cart 
+
+c) in search result page we need :
+    1) product id
+    2) product image
+    3) product category
+    4) product name
+    5) product price
+
+d) in product page we need :
+    1) product id
+    2) product image
+    3) product brand name
+    4) product name
+    5) product rating
+    6) product brand
+    7) product brand socials
+    8) product description
+    9) product colors
+    10) product sizes
+    11) product price
+
+e) in cart we need: 
+    1) product id 
+    2) product name (displayed)
+
+    3>> product_quantity (displayed)
+    4>> product_price 
+    5>> selected_color
+    6>> selected_size
+
+    + the quantity 
+    // by default when we click add to cart ..we add 1 product to cart
+    // later the quantity can be changed in cart or in checkout page
+
+---------------------------------------------------------------------------------------------
+
+
+>>> order schema will include : 
+{
+    user_id
+    products : [
+        {
+            product_id
+            product_specs : {
+                color 
+                size
+            }
+            product_quantity
+        }
+    ]
+    address :
+    amount : 
+    status : default(pending)
+}
+
+
+>>> product schema :
+{
+    product_id :,
+    product_slug : ,
+    product_category :,
+    product_brand_name :,
+    product_name :,
+    product_image : ,
+    product_description : ,
+    product_price : ,
+    product_rating : ,
+    product_sizes : [] ,
+    product_colors :[] ,
+    product_brand_socials : {
+        instagram : ,
+        facebook : ,
+        twitter :
+    }
+    product_availability : ,
+}
+
+
+>>> user schema includes :
+{
+    name :
+    email :
+    password : 
+
+}
